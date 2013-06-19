@@ -1,0 +1,119 @@
+
+@import 'nib/gradients'
+
+topbar_height = 0px
+
+body, html
+  margin 0
+  padding 0
+  height 100%
+  background-color white
+  font-family "dejavu sans"
+
+#topbar
+  position absolute
+  top 0
+  width 100%
+  height topbar_height
+  background-color #CA9061
+
+#wrap
+  position relative
+  top topbar_height
+
+  width 100%
+
+  text-align left
+  margin 0 auto
+
+  min-height 100%
+  overflow auto
+  
+  background-color #FCFFDF
+
+  header
+    border-bottom thick solid #454C2E
+    padding 12px 8px
+    position relative
+    display block
+    background: linear-gradient(top, #444, 100% black);
+    color white
+
+    h1
+      margin 0
+      padding 0
+      text-shadow 0px 0px 1.4px lightgrey
+      font-family Helvetica, sans-serif
+      font-weight normal
+      letter-spacing 0.07em
+
+
+    #userbox
+      position absolute
+      top 6px 
+      right 5px
+      padding 2px 4px
+      border thin solid lightgrey
+      font 9pt Corbel, "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", "Bitstream Vera Sans", "Liberation Sans", Verdana, "Verdana Ref", sans-serif
+      
+      a
+        text-decoration none
+        color inherit
+        display block
+
+  #content
+    position relative
+    min-width: 80%;
+    min-height: 400px;
+    margin-bottom 30px
+    clear both
+    padding 5px
+    padding-bottom 4%
+    overflow auto
+
+  footer
+    display : block
+    text-align: center
+    text-size: 12pt
+    line-height 2em
+    border-top: thin dashed black
+    margin-left 10%
+    width 80%
+    position absolute
+    bottom 0px
+
+
+
+#tic_tac_toe_board
+  width 400px
+  height 400px
+  border-spacing 0
+
+  .sub_board
+    width 90px
+    height 90px
+    margin 20px auto
+    border-spacing 0
+
+    td
+      height 30px
+      width 30px
+      cursor pointer
+      font-size 28px
+      line-height 30px
+      text-align center
+
+    td:hover
+      background-color #F0F0F0
+      
+
+  .left
+    border-right thin solid grey
+  .right
+    border-left thin solid grey
+  .top
+    border-bottom thin solid grey
+  .bottom
+    border-top thin solid grey
+
+

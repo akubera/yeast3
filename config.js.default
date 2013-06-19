@@ -1,0 +1,30 @@
+/*
+ *  config.js.default
+ *
+ *  Copy to config.js and set any parameters to setup the server
+ */
+
+var config = {};
+
+config.web = {};
+
+config.mail = {};
+
+config.web.port = 8080;
+config.web.host = "localhost";
+
+
+config.db = {
+    name : "tic_tac_toe",
+    host : "localhost",
+    port : 27017
+};
+
+config.db.session = config.db;
+config.db.collection = "sessions";
+config.db.secret = "database connection secret";
+
+config.session_secret = 'Long session secret string';
+
+module.exports = config;
+

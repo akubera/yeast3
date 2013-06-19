@@ -1,0 +1,16 @@
+{
+  "name": "Ultimate-Tic-Tac-Toe",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node app"
+  },
+  "dependencies": {
+    "express": "3.2.5",
+    "jade": "0.29.0",
+    "mime": "*",
+    "stylus": "*",
+    "nib": "*",
+    "socket.io": "*"
+  }
+}
