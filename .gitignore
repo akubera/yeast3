@@ -8,5 +8,6 @@ config.js
 *.d
 *.o
 *.mk
+*.css
 
 node_modules

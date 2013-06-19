@@ -7,8 +7,7 @@
 
 function render_index(req, res)
 {
-    console.log("rendering index");
-    res.render('index');
+    res.render('index', {});
     return;
 
     if (req.session) {

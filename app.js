@@ -99,7 +99,10 @@ app.configure(function()
 function dynamic_helper(req, res, next)
 {
     res.locals.scripts = ['//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js', '/socket.io/socket.io.js'];
+    res.locals.user = null; // {username : "Andy"}
 //     res.locals.user = req.session.user;
+
+  
 
     if (typeof next === "function") {
         setTimeout(next, 0, null);

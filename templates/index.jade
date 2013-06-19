@@ -1,10 +1,27 @@
 
 extends layout
 
-block content
-  ul#user_list(style="float: left")
-    lh Users
-    li us1
-    li us2
 
-  include tic_tac_toe_board
+append styles
+  link(rel='stylesheet', type='text/css', href='/style/index.css')
+
+
+block content
+
+  #left_column.column.side_column
+    ul#user_list
+      lh Users
+      li us1
+      li us2
+
+  #right_column.column.side_column
+    p nothing here yet
+    hr
+
+  #center_column.column
+    h1 Play Tic Tac Toe!!
+
+    include tic_tac_toe_board
+
+
+

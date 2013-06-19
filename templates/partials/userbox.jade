@@ -1,3 +1,10 @@
 
 #userbox
-  a(href="#") login
+ 
+  -if (user)
+    span= user.username
+    &nbsp;&middot;&nbsp;
+    a(href="#") logout
+
+  -else
+    a(href="#") login
