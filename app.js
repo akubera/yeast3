@@ -112,8 +112,16 @@ function dynamic_helper(req, res, next)
 
 
 // load and run socket.io things
-// var socket_listener = require('sio');
-// sio(io);
+io.sockets.on('connection', function (socket) {
+
+  socket.on("move_made", function (data) {
+    socket.emit("move", data);
+  });
+
+  socket.on('my other event', function (data) {
+    console.log(data);
+  });
+});
 
 // Finally - start the server by listening on the ports specified in the configuration file
 if (typeof config.web.host === 'undefined') {

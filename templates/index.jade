@@ -5,6 +5,8 @@ extends layout
 append styles
   link(rel='stylesheet', type='text/css', href='/style/index.css')
 
+append scripts
+  script(src="/scripts/utt_game.js")
 
 block content
 
@@ -15,8 +17,10 @@ block content
       li us2
 
   #right_column.column.side_column
-    p nothing here yet
-    hr
+    ul#game_list
+      lh Games
+      li game 1
+      li game 2
 
   #center_column.column
     h1 Play Tic Tac Toe!!
