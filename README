@@ -1,0 +1,18 @@
+############################
+### Ultimate Tic-Tac-Toe ###
+############################
+
+Nothing really works - it loads a page and you can click the 
+squares, but doesn't have any database management or game 
+rules yet.
+
+Installation:
+
+ $ npm install
+
+Running:
+
+ $ node app
+
+
+Enjoy!

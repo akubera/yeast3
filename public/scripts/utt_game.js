@@ -29,7 +29,15 @@ function on_box_click(ev) {
   socket.emit('move_made', { box : dat[1], sub_box : dat[2] });
 }
 
+var toggle = 0;
+
 function on_move(data) {
   var id = "#square_" + data.box + data.sub_box;
-  $(id).html("×");
+  
+  // Unicode : https://en.wikipedia.org/wiki/Geometric_Shapes
+  //   circle: &#9675; double-circle: &#9678; lozenge: &#9674;
+  //
+  $(id).html( toggle++ % 2 ? "&#x00D7;" : "&#9678;");
+
+  $(id).unbind("click");
 }
