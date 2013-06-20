@@ -13,16 +13,13 @@ config.mail = {};
 config.web.port = 8080;
 config.web.host = "localhost";
 
-
+// connection to the mongodb
 config.db = {
     name : "tic_tac_toe",
     host : "localhost",
-    port : 27017
+    port : 27017,
+  secret : "database connection secret"
 };
-
-config.db.session = config.db;
-config.db.collection = "sessions";
-config.db.secret = "database connection secret";
 
 config.session_secret = 'Long session secret string';
 
