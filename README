@@ -2,6 +2,9 @@
 ### Ultimate Tic-Tac-Toe ###
 ############################
 
+Author : Andrew Kubera 
+
+
 Nothing really works - it loads a page and you can click the 
 squares, but doesn't have any database management or game 
 rules yet.
@@ -10,9 +13,15 @@ Installation:
 
  $ npm install
 
+ ** Copy config.js.default to config.js 
+ $ cp config.js.default config.js 
+
+ ** Edit config.js to suit your needs
+
 Running:
 
  $ node app
 
+  ** Then visit in your favorite web browser
 
 Enjoy!

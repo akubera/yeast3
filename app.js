@@ -102,14 +102,10 @@ function dynamic_helper(req, res, next)
     res.locals.user = null; // {username : "Andy"}
 //     res.locals.user = req.session.user;
 
-  
-
     if (typeof next === "function") {
         setTimeout(next, 0, null);
     }
 }
-
-
 
 // load and run socket.io things
 io.sockets.on('connection', function (socket) {
@@ -120,6 +116,10 @@ io.sockets.on('connection', function (socket) {
 
   socket.on('my other event', function (data) {
     console.log(data);
+  });
+  
+  socket.on('disconnect', function () {
+    io.sockets.emit('user disconnected');
   });
 });
 

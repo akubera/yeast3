@@ -6,12 +6,14 @@
 
 var config = {};
 
-config.web = {};
+// webserver config
+config.web = {
+  port : 8080,
+  host : "localhost"
+};
 
+// mailing settings
 config.mail = {};
-
-config.web.port = 8080;
-config.web.host = "localhost";
 
 // connection to the mongodb
 config.db = {
@@ -23,5 +25,6 @@ config.db = {
 
 config.session_secret = 'Long session secret string';
 
+// export the config object
 module.exports = config;
 

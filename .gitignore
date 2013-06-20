@@ -10,4 +10,6 @@ config.js
 *.mk
 *.css
 
+*.pyc
+
 node_modules
