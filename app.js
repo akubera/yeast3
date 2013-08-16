@@ -9,6 +9,12 @@
 var root = global.server_root = __dirname,
   config = require('./config');
 
+
+//
+// #mark -
+// #mark Module Loading
+//
+
 //////
 // Use these 3rd party modules
 //////
@@ -42,6 +48,12 @@ io = io.listen(http_server);
 // Load database schema models
 // var Models = require('schemas');
 // Models.initilize();
+
+
+//
+// #mark -
+// #mark Configuration
+//
 
 // Configure the Express application
 app.configure(function()
@@ -87,9 +99,6 @@ app.configure(function()
   // use Express to route requests
   app.use(app.router);
 
-  // Initialize views
-  require("./views/index.js")(app);
-
   app.use(express.errorHandler());
 
 
@@ -106,6 +115,37 @@ function dynamic_helper(req, res, next)
         setTimeout(next, 0, null);
     }
 }
+
+//
+// #mark -
+// #mark Routing
+//
+
+app.get('/', render_index);
+
+function render_index(req, res)
+{
+    res.render('index', {});
+    return;
+
+    if (req.session) {
+        res.render('index', {
+            layout: false, 
+            login_message : req.session.login_message
+        });
+        req.session.login_message = null;
+    } else {
+        res.render('index', {
+            layout: false
+        });
+    }
+}
+
+
+//
+// #mark -
+// #mark Socket.IO
+//
 
 // load and run socket.io things
 io.sockets.on('connection', function (socket) {
