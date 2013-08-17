@@ -93,7 +93,7 @@ function on_play_button(ev) {
   function _username_keyup(ev) {
     if (ev.key == "Enter") {
       console.log("submit!", ev.target.value); 
-      socket.emit('set_username', { username : ev.target.value });
+      socket.emit('set_user', { username : ev.target.value });
       _update_playbutton("<div id='play_button_content'><span>Verifying Username</span></div>");
     }
   }
@@ -107,6 +107,8 @@ function on_play_button(ev) {
       }
       console.error(data.status, data.debug);
       _update_playbutton("ERROR!");
+    } else {
+      _update_playbutton("Using username : " + data.username);
     }
   });
    

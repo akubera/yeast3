@@ -159,6 +159,8 @@ matchWaitee = null;
 
 // load and run socket.io things
 io.sockets.on('connection', function (socket) {
+
+  // run when user tries to set a username
   socket.on("set_user", function(data) {
     // Set username if not already set.
     if (users.indexOf(data.username) >= 0) {
@@ -170,7 +172,7 @@ io.sockets.on('connection', function (socket) {
     socket.get("username", function(err, value) {
       if (err) {
         socket.set("username", data.username, function() {
-          socket.emit("set_user", {"status": 0});
+          socket.emit("set_user", {"status": 0, "username":data.username});
         });
       } else {
         socket.emit("set_user", {"status": 1, "debug": "You've already set a username!"});
