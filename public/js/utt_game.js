@@ -7,7 +7,7 @@ function utt_game_init() {
   console.log("utt_game_init");
   
   // connect to server
-  socket = io.connect('http://localhost');
+  socket = io.connect();
   
   socket.on('news', function (data) {
     console.log(data);
