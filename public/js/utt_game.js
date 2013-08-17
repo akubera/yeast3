@@ -14,6 +14,8 @@ function utt_game_init() {
     socket.emit('my other event', { my: 'data' });
   });
   
+  socket.on('connection_count', update_connection_count);
+  
   socket.on('move', on_move);
   
   $(".sub_board td").click(on_box_click);
@@ -32,6 +34,10 @@ function on_box_click(ev) {
     cordinates.push(+dat[i]) //"atoi()"
   }
   socket.emit('move_made', { cordinates : cordinates });
+}
+
+function update_connection_count (data) {
+  $("#cnx_num").text(data.count);
 }
 
 var toggle = 0;
