@@ -112,7 +112,14 @@ function on_play_button(ev) {
       console.error(data.status, data.debug);
       _update_playbutton("ERROR!");
     } else {
-      _update_playbutton("Using username : " + data.username);
+      _update_playbutton("Success!");
+      setTimeout(function _remove_button() { 
+        console.log("removing button!");
+        $("#play_button").fadeOut("slow");
+      }, 2500);
+      
+         
+      update_username(data.username);
     }
   });
    
@@ -122,4 +129,7 @@ function on_play_button(ev) {
     
 }
 
+function update_username(name) {
+  $("#userbox").html(name);
+}
 
