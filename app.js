@@ -186,23 +186,39 @@ io.sockets.on('connection', function (socket) {
   socket.on("find_match", function(data) {
     // Dirt-simple matchmaking.  If nobody is waiting, save their name for later.
     socket.get("username", function(err, username) {
-      if (err) {
+      if (!username) {
         socket.emit("find_match", {"status":1, "debug":"You need a username before you can enter the matchmaking queue!"});
+        return;
       }
+
       if (matchWaitee == null) {
         matchWaitee = {username:username, socket:socket};
       } else {
-        var newGame = Game(username, matchWaitee.username);
-        matchWaitee.socket.emit("enter_game", newGame.toJSON());
-        socket.emit("enter_game", newGame.toJSON());
+        var otherPlayer = matchWaitee;
         matchWaitee = null;
+        var newGame = Game(username, otherPlayer.username);
+        newGame.on('move', function(username, coordinates) {
+	  otherPlayer.socket.emit("move", username, coordinates);
+          socket.emit("move", username, coordinates);
+        });
+        otherPlayer.socket.emit("enter_game", newGame.toJSON());
+        socket.emit("enter_game", newGame.toJSON());
       }
     });
   });
 
   socket.on("move_made", function(data) {
-    
-    socket.emit("move", data);
+    socket.get("username", function(err, username) {
+      if (!username) {
+        console.log("No username... can't move!!");
+        return;
+      }
+
+      console.log(username + " trying to move to " + data.coordinates);
+
+      game = games[username];
+      game.move(username, data.coordinates);
+    })
   });
 
   socket.on('disconnect', function () {

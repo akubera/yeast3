@@ -9,6 +9,7 @@ var EventEmitter = require('events').EventEmitter;
 
 function Board(big) {
   var self = this;
+  var _nextMove = 0;
   this.big = big;
   if (big) {
     this.grid = [[new Board(false), new Board(false), new Board(false)],
@@ -26,7 +27,7 @@ function Board(big) {
     if (mark != 0 || mark != 1) {
       throw "Board can only mark 0's and 1's!"
     }
-    
+
     var next = this.grid[spot[0],spot[1]];
     if (big) {
       nextBoard.move(mark, spot.slice(2,4));

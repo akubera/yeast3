@@ -24,10 +24,14 @@ function utt_game_init() {
 function on_box_click(ev) {
   var id = ev.currentTarget.id;
   console.log(ev.currentTarget, id, ev);
-  var re = /square_(\d\d)(\d\d)/;
+  var re = /square_(\d\d\d\d)/;
   console.log(id,re,id.match(re));
   var dat = id.match(re);
-  socket.emit('move_made', { box : dat[1], sub_box : dat[2] });
+  cordinates = []
+  for (var i = 0, i < 4, i++) {
+    cordinates.push(+dat[i]) //"atoi()"
+  }
+  socket.emit('move_made', { cordinates : cordinates });
 }
 
 var toggle = 0;
