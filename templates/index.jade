@@ -10,22 +10,25 @@ append scripts
 
 block content
 
-  #left_column.column.side_column
-    ul#user_list
-      lh Users
-      li us1
-      li us2
 
-  #right_column.column.side_column
-    ul#game_list
-      lh Games
-      li game 1
-      li game 2
+  #c_row.row
 
-  #center_column.column
-    h1 Play Tic Tac Toe!!
+    #left_col.span3
+      ul#l_list0
+        li item 1
 
-    include tic_tac_toe_board
+    #center_col.span6
+      h1 Play Tic Tac Toe!!
 
+      include tic_tac_toe_board
+
+    #right_col.span3
+      ul#game_list
+       lh Games
+
+  #bottom_row.row
+
+    #button_wrap.span12    
+      button#play_button.btn.btn-primary.btn-larger PLAY!
 
 
