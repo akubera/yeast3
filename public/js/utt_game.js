@@ -17,6 +17,7 @@ function utt_game_init() {
   socket.on('move', on_move);
   
   $(".sub_board td").click(on_box_click);
+  $("#play_button").click(on_play_button);
   
 }
 
@@ -41,3 +42,79 @@ function on_move(data) {
 
   $(id).unbind("click");
 }
+
+
+function on_play_button(ev) {
+//   $(ev.target).hide({"speed":"slow"});
+//  $(ev.target).fadeOut('slow');
+//  $(ev.target).replaceWith('<div id="play_button" class="btn btn-primary">PLAY!</div>');
+//   $(ev.target).appendTo("#wrap");
+
+  // Create the username prompt
+  var prompt_wrap_string = "<div id='prompt_wrap'><span>Please Input Username:</span><br/><input id='username_input' type='text' /></div>";
+  var prompt_wrap = $(prompt_wrap_string).hide();
+  // keyup waiting for "enter"
+//   $("#username_input").on("keyup", _username_keyup);
+
+  function _prompt_username() {
+    _update_playbutton(prompt_wrap, function(){ $("#username_input").on("keyup", _username_keyup);});
+    return;
+    
+    // ignore rest for now
+    $('#play_button_content').fadeOut("slow", _fadeout_cb);
+
+    function _fadeout_cb() {
+      $("#play_button_content").replaceWith(prompt_wrap);
+      $('#prompt_wrap').fadeIn("slow");
+    }
+
+  }
+  
+  function _update_playbutton(content, cb) {
+    $("#play_button_content").fadeOut('slow', _fadeout_cb);
+    
+    function _fadeout_cb() {
+      if (typeof content === "string") {
+        $("#play_button_content").html(content);
+      } else {
+        $('#play_button_content').html('');
+        $(content).show().appendTo("#play_button_content");
+      }
+      $('#play_button_content').fadeIn("slow");
+      
+      if (typeof cb === "function") {
+        setTimeout(cb, 0);
+      }
+    }
+  }
+
+    
+  // when username presses enter - handle something
+  function _username_keyup(ev) {
+    console.log("_username_keyup");
+    if (ev.key == "Enter") {
+      console.log("submit!", ev.target.value); 
+      socket.emit('set_username', { username : ev.target.value });
+      _update_playbutton("<div id='play_button_content'><span>Verifying Username</span></div>");
+    }
+  }
+  
+  
+  socket.on('set_username', function (data) { 
+    // There was an error
+    if (data.status !== 0) {
+      if (typeof data.debug === "undefined") {
+        data.debug = "";
+      }
+      console.error(data.status, data.debug);
+      _update_playbutton("ERROR!");
+    }
+  });
+   
+   $(this).off('click');
+   // Call _prompt_username
+   setTimeout(_prompt_username, 0); 
+    
+}
+
+
