@@ -7,7 +7,7 @@
 // First set some global variables and 
 // load the configuration file
 var root = global.server_root = __dirname,
-  config = require('./config');
+config = require('./config');
 
 
 //
@@ -34,7 +34,7 @@ var // Express is the web application framework
     io = require('socket.io');
 
     // For mongo-db backed sessions
-//     mongoStore = require('connect-mongo')(express);
+    // mongoStore = require('connect-mongo')(express);
 
 // The main web application
 var app = express();
@@ -128,17 +128,17 @@ function render_index(req, res)
     res.render('index', {});
     return;
 
-    if (req.session) {
-        res.render('index', {
-            layout: false, 
-            login_message : req.session.login_message
-        });
-        req.session.login_message = null;
-    } else {
-        res.render('index', {
-            layout: false
-        });
-    }
+//    if (req.session) {
+//        res.render('index', {
+//            layout: false, 
+//            login_message : req.session.login_message
+//        });
+//        req.session.login_message = null;
+//    } else {
+//        res.render('index', {
+//            layout: false
+//        });
+//    }
 }
 
 
@@ -146,6 +146,8 @@ function render_index(req, res)
 // #mark -
 // #mark Socket.IO
 //
+
+var 
 
 // load and run socket.io things
 io.sockets.on('connection', function (socket) {
