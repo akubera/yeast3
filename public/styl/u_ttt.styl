@@ -123,9 +123,12 @@ body, html
 
 play_button_size = 36pt
 
-button#play_button
+#play_button
   font-size play_button_size - 8
   line-height play_button_size
   margin 4px auto
   display block
+  user-select none
 
+  #play_button_content
+    width auto

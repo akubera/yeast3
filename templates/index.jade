@@ -6,6 +6,7 @@ append styles
   link(rel='stylesheet', type='text/css', href='/styl/index.css')
 
 append scripts
+  script(src="/js/uttt.js")
   script(src="/js/utt_game.js")
 
 block content
@@ -29,6 +30,7 @@ block content
   #bottom_row.row
 
     #button_wrap.span12    
-      button#play_button.btn.btn-primary.btn-larger PLAY!
+      #play_button.btn.btn-primary.btn-larger
+        span#play_button_content PLAY!
 
 
