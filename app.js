@@ -141,27 +141,73 @@ function render_index(req, res)
 //    }
 }
 
+//
+// #mark -
+// #mark Model
+//
+
+Game = require("./model/game");
+
+users = [];
+games = [];
+matchWaitee = null;
 
 //
 // #mark -
 // #mark Socket.IO
 //
 
-var 
-
 // load and run socket.io things
 io.sockets.on('connection', function (socket) {
+  socket.on("set_user", function(data) {
+    // Set username if not already set.
+    if (users.indexOf(data.username) >= 0) {
+      socket.emit("set_user", {"status":1, "debug": "Username already in use."});
+      return;
+    }
 
-  socket.on("move_made", function (data) {
+    // Set username if we don't already have one.
+    socket.get("username", function(err, value) {
+      if (err) {
+        socket.set("username", data.username, function() {
+          socket.emit("set_user", {"status": 0});
+        });
+      } else {
+        socket.emit("set_user", {"status": 1, "debug": "You've already set a username!"});
+      }
+    });
+  });
+
+  socket.on("find_match", function(data) {
+    // Dirt-simple matchmaking.  If nobody is waiting, save their name for later.
+    socket.get("username", function(err, username) {
+      if (err) {
+        socket.emit("find_match", {"status":1, "debug":"You need a username before you can enter the matchmaking queue!"});
+      }
+      if (matchWaitee == null) {
+        matchWaitee = {username:username, socket:socket};
+      } else {
+        var newGame = Game(username, matchWaitee.username);
+        matchWaitee.socket.emit("enter_game", newGame.toJSON());
+        socket.emit("enter_game", newGame.toJSON());
+        matchWaitee = null;
+      }
+    });
+  });
+
+  socket.on("move_made", function(data) {
+    
     socket.emit("move", data);
   });
 
-  socket.on('my other event', function (data) {
-    console.log(data);
-  });
-  
   socket.on('disconnect', function () {
-    io.sockets.emit('user disconnected');
+    socket.get("username", function(err,username) {
+      toDelete = users.indexOf(username);
+      if (toDelete >= 0) {
+        users.splice(toDelete, 1);
+      }
+    });
+    //io.sockets.emit('user disconnected');
   });
 });
 
