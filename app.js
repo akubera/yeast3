@@ -157,8 +157,14 @@ matchWaitee = null;
 // #mark Socket.IO
 //
 
+var connection_count = 0;
+
 // load and run socket.io things
 io.sockets.on('connection', function (socket) {
+
+  // increment connection count
+  connection_count++;
+
 
   // run when user tries to set a username
   socket.on("set_user", function(data) {
@@ -206,6 +212,7 @@ io.sockets.on('connection', function (socket) {
   });
 
   socket.on('disconnect', function () {
+    connection_count--;
     socket.get("username", function(err,username) {
       toDelete = users.indexOf(username);
       if (toDelete >= 0) {
@@ -214,7 +221,11 @@ io.sockets.on('connection', function (socket) {
     });
     //io.sockets.emit('user disconnected');
   });
+  
+  // send number of connections every 2.5 seconds - for fun and debuging
+  setInterval(function () {socket.emit('connection_count', {'count' : connection_count})}, 2500);
 });
+
 
 // Finally - start the server by listening on the ports specified in the configuration file
 if (typeof config.web.host === 'undefined') {
