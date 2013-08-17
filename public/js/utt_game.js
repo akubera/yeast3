@@ -91,7 +91,6 @@ function on_play_button(ev) {
     
   // when username presses enter - handle something
   function _username_keyup(ev) {
-    console.log("_username_keyup");
     if (ev.key == "Enter") {
       console.log("submit!", ev.target.value); 
       socket.emit('set_username', { username : ev.target.value });
@@ -100,7 +99,7 @@ function on_play_button(ev) {
   }
   
   
-  socket.on('set_username', function (data) { 
+  socket.on('set_user', function (data) { 
     // There was an error
     if (data.status !== 0) {
       if (typeof data.debug === "undefined") {
