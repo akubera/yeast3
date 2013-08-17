@@ -162,6 +162,10 @@ io.sockets.on('connection', function (socket) {
 
   // run when user tries to set a username
   socket.on("set_user", function(data) {
+  
+    console.log("SETTING USER!!!", data);
+    console.log(users);
+  
     // Set username if not already set.
     if (users.indexOf(data.username) >= 0) {
       socket.emit("set_user", {"status":1, "debug": "Username already in use."});

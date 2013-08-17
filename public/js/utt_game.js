@@ -91,7 +91,7 @@ function on_play_button(ev) {
     
   // when username presses enter - handle something
   function _username_keyup(ev) {
-    if (ev.key == "Enter") {
+    if (ev.which === 13) {
       console.log("submit!", ev.target.value); 
       socket.emit('set_user', { username : ev.target.value });
       _update_playbutton("<div id='play_button_content'><span>Verifying Username</span></div>");
