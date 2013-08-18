@@ -53,7 +53,7 @@ function on_move(data) {
   // Unicode : https://en.wikipedia.org/wiki/Geometric_Shapes
   //   circle: &#9675; double-circle: &#9678; lozenge: &#9674;
   //
-  $(id).html( toggle++ % 2 ? "&#x00D7;" : "&#9678;");
+  $(id).html( data['playerNumber'] % 2 ? "&#x00D7;" : "&#9678;");
 
   $(id).unbind("click");
 }

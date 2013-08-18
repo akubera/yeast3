@@ -21,12 +21,12 @@ function Game(user0, user1) {
     } else {
       user = self.user1;
     }
-    self.emit("move", {username:user, coordinates:data.coordinates});
+    self.emit("move", {username:user, playerNumber:data.playerNumber, coordinates:data.coordinates});
   });
   
   this.move = function(username, coordinates) { 
     var playerNumber = null;
-    if (username = user0) {
+    if (username == user0) {
       playerNumber = 0;
     } else {
       playerNumber = 1;

@@ -205,9 +205,9 @@ io.sockets.on('connection', function (socket) {
         var otherPlayer = matchWaitee;
         matchWaitee = null;
         var newGame = new Game(username, otherPlayer.username);
-        newGame.on('move', function(username, coordinates) {
-	  otherPlayer.socket.emit("move", username, coordinates);
-          socket.emit("move", username, coordinates);
+        newGame.on('move', function(data) {
+	  otherPlayer.socket.emit("move", data);
+          socket.emit("move", data);
         });
         games[otherPlayer.username] = newGame;
         games[username] = newGame;
