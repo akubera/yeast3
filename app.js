@@ -216,13 +216,17 @@ io.sockets.on('connection', function (socket) {
   socket.on("move_made", function(data) {
     socket.get("username", function(err, username) {
       if (!username) {
-        console.log("No username... can't move!!");
+        socket.emit("move_made", {"status":1, "debug":"Not logged in, no moves possible."});
         return;
       }
 
       console.log(username + " trying to move to " + data.coordinates);
 
       game = games[username];
+      if (!game) {
+        socket.emit("move_made", {"status":1, "debug":"Not in a game yet, no moves possible."});
+        return;
+      }
       game.move(username, data.coordinates);
     })
   });

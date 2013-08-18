@@ -29,11 +29,11 @@ function on_box_click(ev) {
   var re = /square_(\d\d\d\d)/;
   console.log(id,re,id.match(re));
   var dat = id.match(re);
-  cordinates = []
-  for (var i = 0, i < 4, i++) {
-    cordinates.push(+dat[i]) //"atoi()"
+  coordinates = []
+  for (var i = 0; i < 4; i++) {
+    coordinates.push(+dat[i]) //"atoi()"
   }
-  socket.emit('move_made', { cordinates : cordinates });
+  socket.emit('move_made', { coordinates : coordinates });
 }
 
 function update_connection_count (data) {
@@ -43,7 +43,11 @@ function update_connection_count (data) {
 var toggle = 0;
 
 function on_move(data) {
-  var id = "#square_" + data.box + data.sub_box;
+  var coordinates = "";
+  for (var i = 0; i < 4; i++) {
+    s = s + data.coordinates[i];
+  }
+  var id = "#square_" + coordinates;
   
   // Unicode : https://en.wikipedia.org/wiki/Geometric_Shapes
   //   circle: &#9675; double-circle: &#9678; lozenge: &#9674;
@@ -124,8 +128,9 @@ function on_play_button(ev) {
         $("#play_button").fadeOut("slow");
       }, 2500);
       
-         
       update_username(data.username);
+
+      //TODO: This is where the request for a match should occur?
     }
   });
    
