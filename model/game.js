@@ -4,8 +4,8 @@
  *  A game between two users.  Can have other observers.
  */
 
-var util = require('util');
-var EventEmitter = require('events').EventEmitter;
+util = require('util');
+EventEmitter = require('events').EventEmitter;
 Board = require('./board');
 
 function Game(user0, user1) {
@@ -14,16 +14,26 @@ function Game(user0, user1) {
   this.user0 = user0;
   this.user1 = user1;
 
-  board.on("move", function(playerNumber, coordinates) {
+  this.board.on("move", function(data) {
     var user = null;
-    if (playerNumber == 0) {
+    if (data.playerNumber == 0) {
       user = self.user0;
     } else {
       user = self.user1;
     }
-    self.emit("move", user, coordinates);
+    self.emit("move", {username:user, coordinates:data.coordinates});
   });
   
+  this.move = function(username, coordinates) { 
+    var playerNumber = null;
+    if (username = user0) {
+      playerNumber = 0;
+    } else {
+      playerNumber = 1;
+    }
+
+    self.board.move(playerNumber, coordinates);
+  }
 
   this.toJSON = function() {
     return {"user0": this.user0, "user1": this.user1};
@@ -31,6 +41,6 @@ function Game(user0, user1) {
 
   return this;
 }
-util.inherits(EventEmitter, Game);
+util.inherits(Game, EventEmitter);
 
 module.exports = Game;

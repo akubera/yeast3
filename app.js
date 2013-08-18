@@ -149,7 +149,7 @@ function render_index(req, res)
 Game = require("./model/game");
 
 users = [];
-games = [];
+games = {};
 matchWaitee = null;
 
 //
@@ -164,7 +164,7 @@ io.sockets.on('connection', function (socket) {
 
   // increment connection count
   connection_count++;
-
+  io.sockets.emit('connection_count', {'count' : connection_count});
 
   // run when user tries to set a username
   socket.on("set_user", function(data) {
@@ -198,15 +198,19 @@ io.sockets.on('connection', function (socket) {
       }
 
       if (matchWaitee == null) {
+        console.log(username + " is waiting for a game.")
         matchWaitee = {username:username, socket:socket};
       } else {
+        console.log(username + " is going to play with " + matchWaitee.username);
         var otherPlayer = matchWaitee;
         matchWaitee = null;
-        var newGame = Game(username, otherPlayer.username);
+        var newGame = new Game(username, otherPlayer.username);
         newGame.on('move', function(username, coordinates) {
 	  otherPlayer.socket.emit("move", username, coordinates);
           socket.emit("move", username, coordinates);
         });
+        games[otherPlayer.username] = newGame;
+        games[username] = newGame;
         otherPlayer.socket.emit("enter_game", newGame.toJSON());
         socket.emit("enter_game", newGame.toJSON());
       }
@@ -214,6 +218,7 @@ io.sockets.on('connection', function (socket) {
   });
 
   socket.on("move_made", function(data) {
+    // If a user is logged in and has a game, make a move in that game.
     socket.get("username", function(err, username) {
       if (!username) {
         socket.emit("move_made", {"status":1, "debug":"Not logged in, no moves possible."});
@@ -233,6 +238,7 @@ io.sockets.on('connection', function (socket) {
 
   socket.on('disconnect', function () {
     connection_count--;
+    io.sockets.emit('connection_count', {'count' : connection_count});
     socket.get("username", function(err,username) {
       toDelete = users.indexOf(username);
       if (toDelete >= 0) {
@@ -241,9 +247,6 @@ io.sockets.on('connection', function (socket) {
     });
     //io.sockets.emit('user disconnected');
   });
-  
-  // send number of connections every 2.5 seconds - for fun and debuging
-  setInterval(function () {socket.emit('connection_count', {'count' : connection_count})}, 2500);
 });
 
 

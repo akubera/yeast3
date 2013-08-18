@@ -24,7 +24,7 @@ function Board(big) {
   this.move = function(mark, spot) {
     // Spot is an array of 2*boardDepth, where board depth is the number of
     // levels including this one
-    if (mark != 0 || mark != 1) {
+    if (mark != 0 && mark != 1) {
       throw "Board can only mark 0's and 1's!"
     }
 
@@ -34,11 +34,11 @@ function Board(big) {
     } else {
       this.grid[spot[0],spot[1]] = mark;
     }
-    this.emit('move', mark, spot);
+    this.emit('move', {"playerNumber":mark, "coordinates":spot});
   }
 
   return this;
 }
-util.inherits(EventEmitter, Board);
+util.inherits(Board, EventEmitter);
 
 module.exports = Board;

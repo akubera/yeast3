@@ -31,7 +31,7 @@ function on_box_click(ev) {
   var dat = id.match(re);
   coordinates = []
   for (var i = 0; i < 4; i++) {
-    coordinates.push(+dat[i]) //"atoi()"
+    coordinates.push(+dat[1][i]) //"atoi()"
   }
   socket.emit('move_made', { coordinates : coordinates });
 }
@@ -44,10 +44,11 @@ var toggle = 0;
 
 function on_move(data) {
   var coordinates = "";
+  var s = "";
   for (var i = 0; i < 4; i++) {
     s = s + data.coordinates[i];
   }
-  var id = "#square_" + coordinates;
+  var id = "#square_" + s;
   
   // Unicode : https://en.wikipedia.org/wiki/Geometric_Shapes
   //   circle: &#9675; double-circle: &#9678; lozenge: &#9674;
@@ -130,8 +131,13 @@ function on_play_button(ev) {
       
       update_username(data.username);
 
-      //TODO: This is where the request for a match should occur?
     }
+
+    // Now that we have a username, we can request a match
+    socket.emit("find_match");
+    socket.once("start_match", function(gameJSON) {
+      //TODO
+    });
   });
    
    $(this).off('click');
