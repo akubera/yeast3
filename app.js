@@ -107,7 +107,7 @@ app.configure(function()
 // Default variables and functions for the renderer
 function dynamic_helper(req, res, next)
 {
-    res.locals.scripts = ['//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js', '/socket.io/socket.io.js'];
+    res.locals.scripts = ['/js/jquery-1.8.0.min.js', '/socket.io/socket.io.js'];
     res.locals.user = null; // {username : "Andy"}
 //     res.locals.user = req.session.user;
 
@@ -210,7 +210,7 @@ io.sockets.on('connection', function (socket) {
         // has been made.
         var newGame = new Game(username, otherPlayer.username);
         newGame.on('move', function(data) {
-	  otherPlayer.socket.emit("move", data);
+	        otherPlayer.socket.emit("move", data);
           socket.emit("move", data);
         });
 
