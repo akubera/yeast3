@@ -31,7 +31,7 @@ function Board(big) {
     // Spot is an array of 2*boardDepth, where board depth is the number of
     // levels including this one
     if (mark != 0 && mark != 1) {
-      throw "Board can only mark 0's and 1's!"
+      throw "Board can only mark 0's and 1's!";
     }
 
     if (self.big && mark != whoseTurn) {
@@ -40,16 +40,16 @@ function Board(big) {
       return;
     }
 
-    var nextBoard = this.grid[spot[0],spot[1]];
+    var nextBoard = this.grid[spot[0]][spot[1]];
     if (this.big) {
       nextBoard.move(mark, spot.slice(2,4));
 
       // Update whose turn it is.
-      whoseTurn++
+      whoseTurn++;
       whoseTurn %= 2;
 
     } else {
-      this.grid[spot[0],spot[1]] = mark;
+      this.grid[spot[0]][spot[1]] = mark;
     }
     this.emit('move', {"playerNumber":mark, "coordinates":spot});
   }
