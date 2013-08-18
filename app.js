@@ -190,7 +190,7 @@ io.sockets.on('connection', function (socket) {
   });
 
   socket.on("find_match", function(data) {
-    // Dirt-simple matchmaking.  If nobody is waiting, save their name for later.
+    // Dirt-simple matchmaking.
     socket.get("username", function(err, username) {
       if (!username) {
         socket.emit("find_match", {"status":1, "debug":"You need a username before you can enter the matchmaking queue!"});
@@ -201,16 +201,24 @@ io.sockets.on('connection', function (socket) {
         console.log(username + " is waiting for a game.")
         matchWaitee = {username:username, socket:socket};
       } else {
+        // If someone is already waiting, match up with them.
         console.log(username + " is going to play with " + matchWaitee.username);
         var otherPlayer = matchWaitee;
         matchWaitee = null;
+
+        // Create new game, set up callbacks to notify each player when a move
+        // has been made.
         var newGame = new Game(username, otherPlayer.username);
         newGame.on('move', function(data) {
 	  otherPlayer.socket.emit("move", data);
           socket.emit("move", data);
         });
+
+        // Keep a record of who is playing what game.
         games[otherPlayer.username] = newGame;
         games[username] = newGame;
+
+        // Inform the players that the game has started.
         otherPlayer.socket.emit("enter_game", newGame.toJSON());
         socket.emit("enter_game", newGame.toJSON());
       }
@@ -232,7 +240,18 @@ io.sockets.on('connection', function (socket) {
         socket.emit("move_made", {"status":1, "debug":"Not in a game yet, no moves possible."});
         return;
       }
-      game.move(username, data.coordinates);
+
+      // Make the move.
+      try {
+        game.move(username, data.coordinates);
+      } catch (e) {
+        // Catch illegal moves, tell the client about them.
+        if (e.badmove) {
+          socket.emit("move_made", {"status":1, "debug":e.message});
+        } else {
+          throw e;
+        }
+      }
     })
   });
 
@@ -245,7 +264,6 @@ io.sockets.on('connection', function (socket) {
         users.splice(toDelete, 1);
       }
     });
-    //io.sockets.emit('user disconnected');
   });
 });
 
