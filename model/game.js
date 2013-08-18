@@ -10,7 +10,7 @@ Board = require('./board');
 
 function Game(user0, user1) {
   var self = this;
-  this.board = new Board();
+  this.board = new Board(true);
   this.user0 = user0;
   this.user1 = user1;
 

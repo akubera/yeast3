@@ -9,7 +9,9 @@ var EventEmitter = require('events').EventEmitter;
 
 function Board(big) {
   var self = this;
-  var _nextMove = 0;
+  var whoseTurn = 0;
+  var previousCoordinates = null;
+  var _finished = false;
   this.big = big;
   if (big) {
     this.grid = [[new Board(false), new Board(false), new Board(false)],
@@ -21,6 +23,10 @@ function Board(big) {
                  [null,null,null]];
   }
 
+  this.finished = function() {
+    return _finished;
+  }
+
   this.move = function(mark, spot) {
     // Spot is an array of 2*boardDepth, where board depth is the number of
     // levels including this one
@@ -28,9 +34,20 @@ function Board(big) {
       throw "Board can only mark 0's and 1's!"
     }
 
-    var next = this.grid[spot[0],spot[1]];
-    if (big) {
+    if (self.big && mark != whoseTurn) {
+      //throw "Not your turn!";
+      // Drop silently instead.
+      return;
+    }
+
+    var nextBoard = this.grid[spot[0],spot[1]];
+    if (this.big) {
       nextBoard.move(mark, spot.slice(2,4));
+
+      // Update whose turn it is.
+      whoseTurn++
+      whoseTurn %= 2;
+
     } else {
       this.grid[spot[0],spot[1]] = mark;
     }
