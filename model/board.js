@@ -10,7 +10,7 @@ var EventEmitter = require('events').EventEmitter;
 function Board(big) {
   var self = this;
   var whoseTurn = 0;
-  var previousCoordinates = null;
+  var _prevCoords = null;
   var _finished = false;
   var _winner = undefined;
   this.big = big;
@@ -75,11 +75,18 @@ function Board(big) {
 
     if (this.big) {
       var nextBoard = this.grid[spot[0]][spot[1]];
+      if (_prevCoords != undefined &&
+          (_prevCoords[0] != spot[0] || _prevCoords[1] != spot[1]) &&
+          !nextBoard.finished()) {
+        throw {badmove:true, message:"You aren't allowed to play there!"};
+      }
       nextBoard.move(mark, spot.slice(2));
 
       // Update whose turn it is.
       whoseTurn++;
       whoseTurn %= 2;
+
+      _prevCoords = spot.slice(-2);
 
     } else {
       if (this.grid[spot[0]][spot[1]] != null) {
