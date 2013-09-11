@@ -11,6 +11,6 @@
     "mime": "*",
     "stylus": "*",
     "nib": "*",
-    "socket.io": "*"
+    "socket.io" : "0.9.14"
   }
 }

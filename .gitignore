@@ -8,7 +8,7 @@ config.js
 *.d
 *.o
 *.mk
-*.css
+public/styl/*.css
 
 *.pyc
 
