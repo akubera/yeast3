@@ -7,21 +7,52 @@
 var util = require('util');
 var EventEmitter = require('events').EventEmitter;
 
-function Board(big) {
+/*
+ *  Board Model
+ *
+ *  Game State Structure - used for both the top level board and each internal board
+ *  TODO : Separate board functions (checkInARow) from game functions
+ *  TODO : Multidimensional (nxn boards) 
+ */
+function Board(n, big) {
+  // Closure reference
   var self = this;
+  
+  // internal variable keeping track of who will make the next move - either 0 or 1
+  var turn_number = 0;
   var whoseTurn = 0;
+
+  // the previous coordinates sent
   var _prevCoords = null;
+  
+  // an array of all move objects made on this board
+  var _move_list = [];
+  
+  // boolean whether game is complete or not
   var _finished = false;
+  
+  // A winner? - I'm not sure (username of winner of this game)
   var _winner = undefined;
+  
+  // set dimensional value - ensure integer
+  n = parseInt(n);
+  var _n = n;
+  
+  // big is parameter used for determining either top-level or lower-level board
   this.big = big;
-  if (big) {
-    this.grid = [[new Board(false), new Board(false), new Board(false)],
-                 [new Board(false), new Board(false), new Board(false)],
-                 [new Board(false), new Board(false), new Board(false)]];
-  } else {
-    this.grid = [[null,null,null],
-                 [null,null,null],
-                 [null,null,null]];
+  
+  // the main data structure of the board 
+  this.grid = [];
+  var i, j;
+  // loop through 'n' times - size of grid
+  for (i = n; i; i--) {
+    var row = [];
+    for (j = n; j; j--) {
+      // if big push new lower-level board into row else push null
+      row.push(big ? new Board(n, false) : null);
+    }
+    // push the row into the grid
+    this.grid.push(row);
   }
 
   this.finished = function() {
@@ -32,6 +63,7 @@ function Board(big) {
     return _winner;
   }
 
+  // check for winning conditions
   function checkWin() {
     // check for victory
     // A loop... maybe the compiler will unroll it.
@@ -44,6 +76,7 @@ function Board(big) {
     checkInARow(self.grid[0][2], self.grid[1][1], self.grid[2][0]);
   }
 
+  // determines if 3 squares have same winner
   function checkInARow(sq0, sq1, sq2) {
     if (self.big) {
       if (sq0.winner() != null && sq0.winner() == sq1.winner() && sq1.winner() == sq2.winner()) {
@@ -58,6 +91,7 @@ function Board(big) {
     }
   }
 
+  // Bleh - a lot of stuff going on here
   this.move = function(mark, spot) {
     // Spot is an array of 2*boardDepth, where board depth is the number of
     // levels including this one
@@ -83,8 +117,7 @@ function Board(big) {
       nextBoard.move(mark, spot.slice(2));
 
       // Update whose turn it is.
-      whoseTurn++;
-      whoseTurn %= 2;
+      whoseTurn = ++turn_number % 2;
 
       _prevCoords = spot.slice(-2);
 
@@ -97,10 +130,20 @@ function Board(big) {
 
     this.emit('move', {"playerNumber":mark, "coordinates":spot});
     checkWin();
-  }
+  };
+  
+  this.toJSON = function() {
+    return {'grid' : self.grid};
+  };
 
   return this;
 }
+
+Board.fromJSON = function (obj) {
+  console.log("Board.fromJSON this : ", this);
+}
+
+
 util.inherits(Board, EventEmitter);
 
 module.exports = Board;

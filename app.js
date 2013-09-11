@@ -143,10 +143,11 @@ function render_index(req, res)
 
 //
 // #mark -
-// #mark Model
+// #mark Models
 //
 
 Game = require("./model/game");
+User = require("./model/user");
 
 users = [];
 games = {};
