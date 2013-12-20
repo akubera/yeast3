@@ -4,36 +4,40 @@
  *  Ultimate tic-tac-toe application file
  */
 
-// First set some global variables and 
-// load the configuration file
-var root = global.server_root = __dirname;
+// First set some global variables
+var root = global.server_root = __dirname,
+  use_db = true;
+
 
 process.argv.forEach(function (val, index, array) {
   if (index < 2) return;
   if (val === "--nodb") {
     // TODO : Handle Databaseless server
+    use_db = false;
   }
 });
 
-
-
 // Load config file - if it doesn't exist, prompt user to create one by copying the defaults
 try {
-  var config = require('./config');
+  var conf = require('./config');
 } catch (e) {
   console.error("\033[1;31mERROR\033[0m :", "No file config.js - please copy 'config.js.default' to 'config.js' and set the correct parameters. i.e. please run:");
   console.error("cp config.js.default config.js && $EDITOR config.js");
   return 1;
 }
 
-if (config.web.session.secret === "") {
+if (conf.web.session.secret === "") {
   console.error("Web secret not set! For your own security, please mash your keyboard to set the session.secret in the config.js file.");
   console.error("Don't forget that the database secret needs to be set as well.");
   return 1;
 }
-if (config.db.opts.secret === "") {
+if (conf.db.opts.secret === "") {
   console.error("Database secret not set! Please mash your keyboard to set the database.opts.secret value in the config.js file.");
   return 1;
+}
+
+if (!use_db) {
+  console.error("Databaseless server is not currently implemented.");
 }
 
 //
@@ -57,10 +61,29 @@ var // Express is the web application framework
     nib = require('nib'),
 
     // For websockets
-    io = require('socket.io');
+    io = require('socket.io'),
+
+    // Mongodb abstraction
+    mongoose = require('mongoose');
 
     // For mongo-db backed sessions
     // mongoStore = require('connect-mongo')(express);
+
+
+// Load database schema models
+var models = require('./model');
+// var Models = require('schemas');
+// Models.initilize();
+
+// Connect to database
+var db = mongoose.connect(conf.db.host, conf.db.name, conf.db.port, conf.db.opts, function (err) {
+  if (err) {
+    console.error("Could not connect to database", e.msg());
+    exit(1);
+  }
+  console.log("Connected to database.");
+});
+
 
 // The main web application
 var app = express();
@@ -71,10 +94,6 @@ var http_server = http.createServer(app);
 // Replace io with a socketio object using the new http_server
 io = io.listen(http_server);
 
-// Load database schema models
-// var Models = require('schemas');
-// Models.initilize();
-
 
 //
 // #mark -
@@ -84,6 +103,10 @@ io = io.listen(http_server);
 // Configure the Express application
 app.configure(function()
 {
+  // set some parameters
+  app.set('host', conf.web.host || "localhost");
+  app.set('port', conf.web.port || "8080");
+
   // Log everything
   app.use(express.logger('dev'));
 
@@ -114,7 +137,7 @@ app.configure(function()
 //  app.use(express.session(config.web.session));
 
   // Use config
-  app.use(express.session({secret : config.web.session.secret}));
+  app.use(express.session({secret : conf.web.session.secret}));
 
   // Using Stylus to create css from the /public/stylesheets directory
   app.use(stylus.middleware({src: __dirname + "/public", compile : function (str, path) {return stylus(str).set('filename', path).set('compress', true).use(nib());}}));
@@ -297,12 +320,6 @@ io.sockets.on('connection', function (socket) {
   });
 });
 
-
-// Finally - start the server by listening on the ports specified in the configuration file
-if (typeof config.web.host === 'undefined') {
-    http_server.listen(config.web.port);
-    console.log('Server running using port', config.web.port);
-} else {
-    http_server.listen(config.web.port, config.web.host);
-    console.log('Server running at http://' + config.web.host + ':'+config.web.port);
-}
+http_server.listen(app.get('port'), app.get('host'), function () {
+  console.log('Express server listening on ' + app.get('host') + ':' + app.get('port'));
+});
