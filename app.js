@@ -78,7 +78,7 @@ var models = require('./model');
 // Connect to database
 var db = mongoose.connect(conf.db.host, conf.db.name, conf.db.port, conf.db.opts, function (err) {
   if (err) {
-    console.error("Could not connect to database", e.msg());
+    console.error("Could not connect to database", e);
     exit(1);
   }
   console.log("Connected to database.");
@@ -151,9 +151,8 @@ app.configure(function()
   // use Express to route requests
   app.use(app.router);
 
+  // report errors in a pretty way
   app.use(express.errorHandler());
-
-
 });
 
 // Default variables and functions for the renderer
@@ -198,8 +197,8 @@ function render_index(req, res)
 // #mark Models
 //
 
-Game = require("./model/game");
-User = require("./model/user");
+Game = models.game;
+User = models.user;
 
 users = [];
 games = {};
