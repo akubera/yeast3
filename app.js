@@ -6,9 +6,35 @@
 
 // First set some global variables and 
 // load the configuration file
-var root = global.server_root = __dirname,
-config = require('./config');
+var root = global.server_root = __dirname;
 
+process.argv.forEach(function (val, index, array) {
+  if (index < 2) return;
+  if (val === "--nodb") {
+    // TODO : Handle Databaseless server
+  }
+});
+
+
+
+// Load config file - if it doesn't exist, prompt user to create one by copying the defaults
+try {
+  var config = require('./config');
+} catch (e) {
+  console.error("\033[1;31mERROR\033[0m :", "No file config.js - please copy 'config.js.default' to 'config.js' and set the correct parameters. i.e. please run:");
+  console.error("cp config.js.default config.js && $EDITOR config.js");
+  return 1;
+}
+
+if (config.web.session.secret === "") {
+  console.error("Web secret not set! For your own security, please mash your keyboard to set the session.secret in the config.js file.");
+  console.error("Don't forget that the database secret needs to be set as well.");
+  return 1;
+}
+if (config.db.opts.secret === "") {
+  console.error("Database secret not set! Please mash your keyboard to set the database.opts.secret value in the config.js file.");
+  return 1;
+}
 
 //
 // #mark -
@@ -76,7 +102,7 @@ app.configure(function()
 
 //    // Session Storage (store into the mongodb database - register after opening)
 //  app.use(express.session({
-//    secret : config.session_secret,
+//    secret : config.web.session.secret,
 ////  cookie : { maxAge : 15*60*1000}, // 15 minutes, in milliseconds
 //    store: new mongoStore({
 //      db: db.db,
@@ -84,8 +110,11 @@ app.configure(function()
 //    })
 //  }));
 
+//    //  Use the settings in web.session to setup the session
+//  app.use(express.session(config.web.session));
+
   // Use config
-  app.use(express.session({secret : config.session_secret}));
+  app.use(express.session({secret : config.web.session.secret}));
 
   // Using Stylus to create css from the /public/stylesheets directory
   app.use(stylus.middleware({src: __dirname + "/public", compile : function (str, path) {return stylus(str).set('filename', path).set('compress', true).use(nib());}}));
@@ -162,7 +191,7 @@ var connection_count = 0;
 
 // load and run socket.io things
 io.sockets.on('connection', function (socket) {
-
+	
   // increment connection count
   connection_count++;
   io.sockets.emit('connection_count', {'count' : connection_count});

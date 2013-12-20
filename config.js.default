@@ -6,24 +6,62 @@
 
 var config = {};
 
-// webserver config
+// Webserver Configuration
 config.web = {
-  port : 8080,
-  host : "localhost"
+
+      // Which port the server should listen for connections. 
+      // Port 80 is standard http-server
+      // Ports above 1024 do not require root-access
+      port : 8080,
+
+      // The hostname the server listens on
+      //  "localhost" or "127.0.0.1" will accept connections from only localhost
+      //  "0.0.0.0" Allows connections from anywhere
+      host : "0.0.0.0",
+
+      // Information on how the sessions are stored
+      session : {
+
+         // **************************
+         //   SET THIS TO RANDOM TEXT
+         // **************************
+         secret : "",
+
+         collection : "sessions"
+      }
+    
 };
 
 // mailing settings
 config.mail = {};
 
-// connection to the mongodb
+// Database connection settings
 config.db = {
+    // Collection name
     name : "tic_tac_toe",
-    host : "localhost",
-    port : 27017,
-  secret : "database connection secret"
-};
 
-config.session_secret = 'Long session secret string';
+    // Hostname of the machine running the database
+    host : "localhost",
+
+    // Port the database is listening on
+    port : 27017,
+
+    opts : {
+      // User with access to collection
+      user : "tic_tac_toe",
+
+      // Database password
+      pass : "",
+
+      // Connection secret - fill with random characters
+      secret : ""
+
+      server : {
+        auto_reconnect : false
+      }
+
+    }
+};
 
 // export the config object
 module.exports = config;
