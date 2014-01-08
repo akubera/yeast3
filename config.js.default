@@ -54,7 +54,7 @@ config.db = {
       pass : "",
 
       // Connection secret - fill with random characters
-      secret : ""
+      secret : "",
 
       server : {
         auto_reconnect : false

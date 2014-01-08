@@ -78,8 +78,8 @@ var models = require('./model');
 // Connect to database
 var db = mongoose.connect(conf.db.host, conf.db.name, conf.db.port, conf.db.opts, function (err) {
   if (err) {
-    console.error("Could not connect to database", e);
-    exit(1);
+    console.error("Could not connect to database", err);
+    process.exit(1);
   }
   console.log("Connected to database.");
 });
