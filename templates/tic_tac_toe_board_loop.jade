@@ -1,0 +1,17 @@
+
+table#tic_tac_toe_board
+
+  -for (var outer_row = 0; outer_row < 3; outer_row++)
+    tr
+    -var v_position = [top, middle, bottom][outer_row]
+    -for (var outer_col = 0; outer_col < 3; outer_col++)
+      -var h_position = [left, center, right][outer_row]
+      td#square_{outer_row}{outer_col}.{v_position}.{h_position}
+        table#ttt_sboard_{outer_row}{inner_row}.sub_board
+          -for (var inner_row = 0; inner_row < 3; inner_row++) 
+            -var inner_v_p = [top, middle, bottom][inner_row]
+            tr
+              -for (var inner_col = 0; inner_col < 3; inner_col++)
+                -var inner_h_p = [left, center, right][outer_row]
+                td#square_{outer_row}{outer_col}{inner_row}{inner_col}.{inner_v_p}.{inner_h_p}
+
